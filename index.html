@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="theme-color" content="#3B82F6" />
+  <title>DET Speaking Practice</title>
+  <style>
+    :root {
+      --blue:   #3B82F6;
+      --blue-d: #2563EB;
+      --orange: #F59E0B;
+      --red:    #EF4444;
+      --green:  #10B981;
+      --text:   #111827;
+      --dim:    #9CA3AF;
+      --border: #E5E7EB;
+      --panel:  #F9FAFB;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #fff;
+      color: var(--text);
+    }
+
+    .screen {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .screen.hidden { display: none; }
+
+    @media (min-width: 520px) {
+      .screen {
+        max-width: 480px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-left:  1px solid var(--border);
+        border-right: 1px solid var(--border);
+      }
+    }
+
+    /* ── HOME ──────────────────────────────────────────────────────────────── */
+    #home {
+      overflow-y: auto;
+      justify-content: flex-start;
+      text-align: center;
+      padding: 40px 28px 36px;
+      gap: 12px;
+    }
+    #home h1 { font-size: 34px; font-weight: 800; letter-spacing: -1px; }
+    .sub { color: var(--dim); font-size: 14px; }
+    .divider { width: 100%; height: 1px; background: var(--border); margin: 2px 0; }
+
+    .desc {
+      color: #374151;
+      font-size: 15px;
+      line-height: 1.75;
+      text-align: left;
+    }
+    .desc strong { color: var(--blue); }
+
+    .hint-box {
+      background: var(--panel);
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 13px;
+      color: var(--dim);
+      line-height: 1.8;
+      text-align: left;
+      width: 100%;
+    }
+
+    .btn-start {
+      width: 100%;
+      height: 54px;
+      background: var(--blue);
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 4px;
+      -webkit-tap-highlight-color: transparent;
+      transition: background 0.15s;
+    }
+    .btn-start:active { background: var(--blue-d); }
+
+    /* ── SHARED TIMER AREA ─────────────────────────────────────────────────── */
+    .timer-area {
+      width: 100%;
+      padding: 20px 24px 0;
+      flex-shrink: 0;
+    }
+    .big-timer {
+      font-size: 52px;
+      font-weight: 800;
+      letter-spacing: -2px;
+      color: var(--text);
+    }
+    .prog-wrap {
+      width: 100%;
+      height: 5px;
+      background: var(--border);
+      margin-top: 12px;
+      flex-shrink: 0;
+    }
+    .prog-bar {
+      height: 100%;
+      background: var(--orange);
+      transition: width 0.9s linear;
+    }
+    .topic-card {
+      background: #fff;
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 20px;
+      font-size: 15px;
+      color: #374151;
+      line-height: 1.75;
+      width: 100%;
+    }
+    .cat-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--blue);
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    /* ── PREP ──────────────────────────────────────────────────────────────── */
+    #prep { justify-content: flex-start; }
+    .prep-body {
+      flex: 1;
+      width: 100%;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 18px;
+    }
+    .screen-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text);
+      text-align: center;
+    }
+    .btn-row { display: flex; gap: 10px; width: 100%; }
+    .btn-secondary {
+      flex: 1;
+      height: 48px;
+      background: var(--panel);
+      color: #374151;
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-cancel {
+      height: 48px;
+      padding: 0 20px;
+      background: transparent;
+      color: var(--dim);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* ── REC ───────────────────────────────────────────────────────────────── */
+    #rec { justify-content: flex-start; }
+    .rec-body {
+      flex: 1;
+      width: 100%;
+      padding: 16px 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 16px;
+    }
+    .rec-footer {
+      width: 100%;
+      padding: 12px 24px 32px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      flex-shrink: 0;
+    }
+    .rec-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .rec-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--red);
+      animation: blink 1.2s ease-in-out infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.15; }
+    }
+    .rec-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--red);
+      letter-spacing: 1.5px;
+    }
+    .wave {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      height: 36px;
+    }
+    .w {
+      width: 4px;
+      border-radius: 2px;
+      background: var(--blue);
+      animation: wave 0.9s ease-in-out infinite;
+    }
+    .w:nth-child(1)  { height:  8px; animation-delay: 0.00s; }
+    .w:nth-child(2)  { height: 14px; animation-delay: 0.08s; }
+    .w:nth-child(3)  { height: 22px; animation-delay: 0.16s; }
+    .w:nth-child(4)  { height: 30px; animation-delay: 0.24s; }
+    .w:nth-child(5)  { height: 36px; animation-delay: 0.32s; }
+    .w:nth-child(6)  { height: 28px; animation-delay: 0.40s; }
+    .w:nth-child(7)  { height: 36px; animation-delay: 0.32s; }
+    .w:nth-child(8)  { height: 30px; animation-delay: 0.24s; }
+    .w:nth-child(9)  { height: 20px; animation-delay: 0.16s; }
+    .w:nth-child(10) { height: 12px; animation-delay: 0.08s; }
+    .w:nth-child(11) { height:  6px; animation-delay: 0.00s; }
+    @keyframes wave {
+      0%, 100% { transform: scaleY(0.3); }
+      50%       { transform: scaleY(1);   }
+    }
+    .btn-stop {
+      width: 100%;
+      height: 52px;
+      background: var(--red);
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: opacity 0.1s;
+    }
+    .btn-stop:active { opacity: 0.85; }
+
+    /* ── PLAYBACK ──────────────────────────────────────────────────────────── */
+    #play {
+      justify-content: center;
+      padding: 32px 28px;
+      gap: 18px;
+      text-align: center;
+    }
+    .play-icon { font-size: 52px; }
+    .play-title { font-size: 22px; font-weight: 800; }
+    .play-sub {
+      font-size: 14px;
+      color: var(--dim);
+      line-height: 1.65;
+    }
+    audio { width: 100%; border-radius: 12px; }
+    .btn-done {
+      width: 100%;
+      height: 52px;
+      background: var(--blue);
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: background 0.15s;
+    }
+    .btn-done:active { background: var(--blue-d); }
+
+    /* ── MIC ERROR ─────────────────────────────────────────────────────────── */
+    #err {
+      justify-content: center;
+      padding: 40px 32px;
+      gap: 16px;
+      text-align: center;
+    }
+    .err-icon { font-size: 48px; }
+    .err-title { font-size: 20px; font-weight: 800; }
+    .err-msg { font-size: 14px; color: var(--dim); line-height: 1.65; }
+  </style>
+</head>
+<body>
+
+<!-- ── HOME ─────────────────────────────────────────────────────────────────── -->
+<div id="home" class="screen">
+  <h1>DET Speaking</h1>
+  <p class="sub">Duolingo English Test · 스피킹 연습</p>
+  <div class="divider"></div>
+  <p class="desc">
+    주제를 읽고 <strong>3분</strong> 동안 자유롭게 말해보세요.<br>
+    <strong>준비 30초</strong> → 자동 녹음 → 듣고 삭제
+  </p>
+  <div class="hint-box">
+    ⏱ 준비 시간: <strong style="color:#374151">30초</strong> — 주제를 읽고 말할 내용을 구상하세요<br>
+    🎙 답변 시간: <strong style="color:#374151">최대 3분</strong> — 1분 30초 이상 말하는 걸 권장해요<br>
+    🗂 15개 카테고리 · 총 105문항에서 무작위 출제
+  </div>
+  <button class="btn-start" onclick="pickTopic()">시  작</button>
+</div>
+
+<!-- ── PREP ─────────────────────────────────────────────────────────────────── -->
+<div id="prep" class="screen hidden">
+  <div class="timer-area">
+    <div class="big-timer" id="prep-timer">0:30</div>
+  </div>
+  <div class="prog-wrap">
+    <div class="prog-bar" id="prep-bar" style="width:100%"></div>
+  </div>
+  <div class="prep-body">
+    <p class="screen-title">준비하세요. 곧 녹음이 시작됩니다.</p>
+    <div class="topic-card">
+      <div class="cat-label" id="prep-cat"></div>
+      <div id="prep-q"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-secondary" onclick="skipPrep()">바로 시작 →</button>
+      <button class="btn-cancel" onclick="cancelToHome()">취소</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── RECORDING ──────────────────────────────────────────────────────────── -->
+<div id="rec" class="screen hidden">
+  <div class="timer-area">
+    <div class="big-timer" id="rec-timer">3:00</div>
+  </div>
+  <div class="prog-wrap">
+    <div class="prog-bar" id="rec-bar" style="width:100%"></div>
+  </div>
+  <div class="rec-body">
+    <p class="screen-title">Speak about the topic below for 3 minutes.</p>
+    <div class="topic-card">
+      <div class="cat-label" id="rec-cat"></div>
+      <div id="rec-q"></div>
+    </div>
+  </div>
+  <div class="rec-footer">
+    <div class="rec-status">
+      <div class="rec-dot"></div>
+      <span class="rec-label">RECORDING</span>
+    </div>
+    <div class="wave">
+      <div class="w"></div><div class="w"></div><div class="w"></div>
+      <div class="w"></div><div class="w"></div><div class="w"></div>
+      <div class="w"></div><div class="w"></div><div class="w"></div>
+      <div class="w"></div><div class="w"></div>
+    </div>
+    <button class="btn-stop" onclick="stopRecording()">■ 녹음 종료</button>
+  </div>
+</div>
+
+<!-- ── PLAYBACK ───────────────────────────────────────────────────────────── -->
+<div id="play" class="screen hidden">
+  <div class="play-icon">🎧</div>
+  <p class="play-title">녹음을 들어보세요</p>
+  <p class="play-sub">다 듣고 나면 '완료'를 눌러주세요.<br>녹음본은 자동으로 삭제됩니다.</p>
+  <audio id="audio-player" controls></audio>
+  <button class="btn-done" onclick="done()">완료 (녹음 삭제)</button>
+</div>
+
+<!-- ── MIC ERROR ─────────────────────────────────────────────────────────── -->
+<div id="err" class="screen hidden">
+  <div class="err-icon">🎙️</div>
+  <p class="err-title">마이크 권한이 필요해요</p>
+  <p class="err-msg">
+    브라우저 설정에서 이 사이트의<br>마이크 접근을 허용한 뒤 다시 시도해주세요.
+  </p>
+  <button class="btn-done" onclick="show('home')">홈으로</button>
+</div>
+
+<script>
+'use strict';
+
+/* ── TOPICS (15 categories × 7 = 105문항) ──────────────────────────────────── */
+const TOPICS = [
+  /* 1. Hobbies & Leisure */
+  { cat: "Hobbies & Leisure", q: "Talk about a hobby or activity that you enjoy in your free time. How did you get started, and why do you like it?" },
+  { cat: "Hobbies & Leisure", q: "Describe a sport or physical activity you participate in. How has it affected your health and lifestyle?" },
+  { cat: "Hobbies & Leisure", q: "Talk about a creative hobby you have, such as painting, writing, or playing music. How do you express yourself through it?" },
+  { cat: "Hobbies & Leisure", q: "Describe your ideal way to spend a weekend. What activities do you enjoy most and why?" },
+  { cat: "Hobbies & Leisure", q: "Talk about a hobby you've recently picked up. What motivated you to try it, and what have you learned from it?" },
+  { cat: "Hobbies & Leisure", q: "Describe a hobby or interest that has evolved over time. How did it start, and how has it changed?" },
+  { cat: "Hobbies & Leisure", q: "Talk about a hobby or interest you share with someone close to you. How has it strengthened your relationship?" },
+
+  /* 2. Technology */
+  { cat: "Technology", q: "Discuss the role of technology in modern society. How has it improved our lives, and what challenges does it present?" },
+  { cat: "Technology", q: "What is your favorite piece of technology and why? How has it improved your daily life and the lives of others?" },
+  { cat: "Technology", q: "Describe a piece of technology that has made a significant impact on your life. How has it changed the way you do things?" },
+  { cat: "Technology", q: "Discuss how social media has changed the way people communicate and interact. What are its benefits and drawbacks?" },
+  { cat: "Technology", q: "Talk about the impact of smartphones on daily life. What are the advantages and disadvantages of being constantly connected?" },
+  { cat: "Technology", q: "Discuss the future of artificial intelligence. How do you think it will change society and the job market in the next decade?" },
+  { cat: "Technology", q: "Talk about a technology-related skill you have or would like to develop. How will it be useful in your future career?" },
+
+  /* 3. Travel */
+  { cat: "Travel", q: "If you could travel to any country in the world, which one would you choose and why? What attracts you to that destination?" },
+  { cat: "Travel", q: "Describe a place you have visited that had a significant impact on you. What made the experience memorable?" },
+  { cat: "Travel", q: "Describe a memorable trip or travel experience. What did you learn from it, and what made it special?" },
+  { cat: "Travel", q: "Describe a memorable experience you had while traveling. What made it stand out, and how did it impact you?" },
+  { cat: "Travel", q: "Talk about a place in your country that you would recommend to tourists. What makes it worth visiting?" },
+  { cat: "Travel", q: "Discuss how travel can broaden one's perspective. Share an experience where traveling changed your viewpoint on life." },
+  { cat: "Travel", q: "Talk about the challenges of traveling in a foreign country. How can people best prepare for cultural differences?" },
+
+  /* 4. Education */
+  { cat: "Education", q: "Discuss the role of education in society. What do you think should be the primary focus of education systems?" },
+  { cat: "Education", q: "Discuss a subject you're passionate about. Why do you find it interesting and how do you continue learning about it?" },
+  { cat: "Education", q: "Describe a positive experience from your school days that had a lasting impact on you." },
+  { cat: "Education", q: "Talk about the importance of lifelong learning. How do you continue to educate yourself outside of formal schooling?" },
+  { cat: "Education", q: "Discuss the advantages and disadvantages of online education compared to traditional classroom learning." },
+  { cat: "Education", q: "Talk about a teacher who had a significant influence on you. What made them effective, and what did you learn from them?" },
+  { cat: "Education", q: "Discuss how education systems should adapt to better prepare students for the rapidly changing future job market." },
+
+  /* 5. People & Relationships */
+  { cat: "People & Relationships", q: "Talk about a person who inspires you. What qualities do they possess that make them inspirational?" },
+  { cat: "People & Relationships", q: "Explain the importance of friendship in your life. How do your friends help you grow and support you?" },
+  { cat: "People & Relationships", q: "Describe a time when you learned an important lesson from a family member or close friend. How has it influenced your decisions?" },
+  { cat: "People & Relationships", q: "Talk about a person who has had a significant influence on your life. How have they impacted you, and what have you learned from them?" },
+  { cat: "People & Relationships", q: "Discuss the qualities that make a good leader. Can you give an example of someone who demonstrates these qualities?" },
+  { cat: "People & Relationships", q: "Talk about the challenges of maintaining long-distance relationships. What strategies can help keep these connections strong?" },
+  { cat: "People & Relationships", q: "Describe your relationship with your community. How do you contribute to it and what do you gain from being part of it?" },
+
+  /* 6. Environment */
+  { cat: "Environment", q: "Describe an environmental issue that concerns you. What steps can individuals and governments take to address it?" },
+  { cat: "Environment", q: "Discuss the importance of environmental conservation. How can we protect our planet for future generations?" },
+  { cat: "Environment", q: "Talk about what you personally do to help the environment. What changes have you made to your lifestyle and why?" },
+  { cat: "Environment", q: "Discuss the impact of climate change on daily life. How has it affected your region and what can people do to adapt?" },
+  { cat: "Environment", q: "Talk about renewable energy sources. Why is transitioning to clean energy important and what obstacles does it face?" },
+  { cat: "Environment", q: "Discuss the relationship between economic development and environmental protection. Can they coexist sustainably?" },
+  { cat: "Environment", q: "Talk about plastic pollution. What are its effects on ecosystems and what solutions can individuals and governments implement?" },
+
+  /* 7. Culture & Traditions */
+  { cat: "Culture & Traditions", q: "Discuss a cultural custom or tradition from your country. What is its significance and how is it celebrated?" },
+  { cat: "Culture & Traditions", q: "What is your favorite holiday and why? Describe how your family celebrates it and any special traditions." },
+  { cat: "Culture & Traditions", q: "Discuss a cultural tradition from your country and how it has evolved over time. What has changed and what remains?" },
+  { cat: "Culture & Traditions", q: "Describe a traditional food or meal from your culture. What makes it special and when is it typically prepared?" },
+  { cat: "Culture & Traditions", q: "Talk about how globalization has affected your local culture. What has been gained and what has been lost?" },
+  { cat: "Culture & Traditions", q: "Discuss the importance of preserving cultural heritage. What risks does it face in modern society?" },
+  { cat: "Culture & Traditions", q: "Talk about a cultural misunderstanding you've experienced or heard about. What did you learn from it?" },
+
+  /* 8. Food */
+  { cat: "Food", q: "Describe a favorite dish from your culture. What are its ingredients, how is it prepared, and what makes it special?" },
+  { cat: "Food", q: "Describe a memorable meal you have had. What made it special, where were you, and what did you eat?" },
+  { cat: "Food", q: "Describe your favorite food and explain what makes it special. How does it connect to your culture or personal experiences?" },
+  { cat: "Food", q: "Discuss how food brings people together. Share an experience where sharing a meal created a meaningful connection." },
+  { cat: "Food", q: "Talk about the importance of healthy eating. How do your food choices affect your overall well-being and energy?" },
+  { cat: "Food", q: "Discuss how food culture has changed in your country. What new influences have emerged and how have people responded?" },
+  { cat: "Food", q: "Talk about your experience cooking or learning to cook. What dish are you most proud of making, and why?" },
+
+  /* 9. Career & Future */
+  { cat: "Career & Future", q: "Talk about a skill that you have learned or would like to learn. How will it benefit your personal or professional life?" },
+  { cat: "Career & Future", q: "Talk about a skill that you possess. How did you develop it and how do you use it in your everyday life?" },
+  { cat: "Career & Future", q: "Talk about an accomplishment or goal you have achieved. What challenges did you face and how did you overcome them?" },
+  { cat: "Career & Future", q: "Discuss your career goals and how you plan to achieve them. What steps have you already taken?" },
+  { cat: "Career & Future", q: "Talk about the importance of work-life balance. How do you maintain it, or how would you like to improve it?" },
+  { cat: "Career & Future", q: "Discuss how the job market is changing due to technology. What skills will be most valuable in the future workforce?" },
+  { cat: "Career & Future", q: "Talk about a career path or field you find interesting. What draws you to it and what would it take to pursue it?" },
+
+  /* 10. Past & Memories */
+  { cat: "Past & Memories", q: "Describe your favorite childhood memory and explain why it is so special to you." },
+  { cat: "Past & Memories", q: "Describe a time when you had to make a difficult decision. What factors did you consider and how did you decide?" },
+  { cat: "Past & Memories", q: "Describe a time when you learned an important lesson. What happened, and how has it influenced your actions since?" },
+  { cat: "Past & Memories", q: "Describe a time when you had to adapt to a new environment or situation. What challenges did you face and how did you overcome them?" },
+  { cat: "Past & Memories", q: "Describe a memorable event from your childhood. What happened and why do you remember it so vividly?" },
+  { cat: "Past & Memories", q: "Talk about a time when you overcame a significant fear or challenge. What strategies did you use and what did you learn?" },
+  { cat: "Past & Memories", q: "Describe a moment when you felt truly proud of yourself. What led to that moment and what did it mean to you?" },
+
+  /* 11. Society & Urban Life */
+  { cat: "Society & Urban Life", q: "What are the advantages and disadvantages of public transportation versus driving a car for everyday commuting?" },
+  { cat: "Society & Urban Life", q: "Discuss the challenges of urban living. What are the benefits and drawbacks of living in a large city?" },
+  { cat: "Society & Urban Life", q: "Talk about the concept of smart cities. What technologies and policies could make cities more efficient and livable?" },
+  { cat: "Society & Urban Life", q: "Discuss the importance of community service and volunteering. How can individuals contribute meaningfully to society?" },
+  { cat: "Society & Urban Life", q: "Talk about the impact of migration on society. What challenges and benefits does it bring to newcomers and host communities?" },
+  { cat: "Society & Urban Life", q: "Discuss how cities can be designed to be more sustainable and people-friendly. What changes are needed?" },
+  { cat: "Society & Urban Life", q: "Talk about the differences between rural and urban life. What are the advantages and disadvantages of each?" },
+
+  /* 12. Language & Communication */
+  { cat: "Language & Communication", q: "Explain the importance of learning a new language. How can it benefit individuals and society as a whole?" },
+  { cat: "Language & Communication", q: "Discuss the importance of communication in today's world. How has technology affected the way we communicate?" },
+  { cat: "Language & Communication", q: "Talk about the challenges of learning a foreign language. What strategies have you found most effective?" },
+  { cat: "Language & Communication", q: "Discuss how body language and non-verbal communication affect our interactions. Give examples from your experience." },
+  { cat: "Language & Communication", q: "Talk about the role of language in preserving culture. What happens when a language disappears from a community?" },
+  { cat: "Language & Communication", q: "Discuss the benefits of being bilingual or multilingual. How does knowing multiple languages affect thinking and opportunity?" },
+  { cat: "Language & Communication", q: "Talk about how communication styles differ across cultures. What misunderstandings can arise and how can they be prevented?" },
+
+  /* 13. Media & Entertainment */
+  { cat: "Media & Entertainment", q: "Discuss a book, movie, or TV show that made a significant impact on you. What was it about, and what emotions did it evoke?" },
+  { cat: "Media & Entertainment", q: "Talk about your favorite kind of music and explain why you enjoy it. How does it make you feel when you listen to it?" },
+  { cat: "Media & Entertainment", q: "Discuss a book, movie, or TV show that has inspired or influenced you. How did it affect your perspective on life?" },
+  { cat: "Media & Entertainment", q: "Talk about the influence of social media content creators. What impact do they have on young people and popular culture?" },
+  { cat: "Media & Entertainment", q: "Discuss the role of journalism and media in society. How has digital media changed how people consume news and information?" },
+  { cat: "Media & Entertainment", q: "Talk about a documentary or news story that changed your perspective on an important issue. What did you learn?" },
+  { cat: "Media & Entertainment", q: "Describe a book or story you would recommend to everyone. What makes it meaningful and universally relevant?" },
+
+  /* 14. Health & Lifestyle */
+  { cat: "Health & Lifestyle", q: "Describe your favorite type of weather and explain how it affects your mood and daily activities." },
+  { cat: "Health & Lifestyle", q: "Describe a typical day in your life. What activities do you usually do and how do you stay organized?" },
+  { cat: "Health & Lifestyle", q: "Talk about the importance of mental health. How can people take better care of their mental and emotional well-being?" },
+  { cat: "Health & Lifestyle", q: "Discuss how regular exercise and physical activity contribute to overall health and happiness." },
+  { cat: "Health & Lifestyle", q: "Talk about the importance of sleep. How do sleep habits affect your productivity, mood, and long-term health?" },
+  { cat: "Health & Lifestyle", q: "Discuss the impact of stress on health and relationships. What strategies can people use to manage stress effectively?" },
+  { cat: "Health & Lifestyle", q: "Talk about some things you do to help you concentrate and stay productive. How have these habits improved your daily life?" },
+
+  /* 15. History & Social Issues */
+  { cat: "History & Social Issues", q: "Describe a historical event that you find interesting. Why does it interest you, and what impact did it have on the world?" },
+  { cat: "History & Social Issues", q: "Talk about a historical figure you admire. What do you find inspiring about their accomplishments and life story?" },
+  { cat: "History & Social Issues", q: "If you could spend a day with any historical figure, who would it be and why? What would you ask them?" },
+  { cat: "History & Social Issues", q: "Discuss a social issue that you feel strongly about. What are the root causes and what solutions would you propose?" },
+  { cat: "History & Social Issues", q: "Talk about gender equality. What progress has been made in recent years and what challenges still remain?" },
+  { cat: "History & Social Issues", q: "Discuss the impact of poverty on communities. What approaches have proven most effective in reducing inequality?" },
+  { cat: "History & Social Issues", q: "Talk about the importance of voting and civic participation. How can people become more engaged and informed citizens?" },
+];
+
+const CAT_COLORS = [
+  '#3B82F6','#10B981','#F59E0B','#8B5CF6','#EF4444',
+  '#EC4899','#14B8A6','#F97316','#6366F1','#84CC16',
+  '#06B6D4','#A855F7','#F43F5E','#22C55E','#64748B',
+];
+
+const CATEGORIES = [...new Set(TOPICS.map(t => t.cat))];
+
+/* ── STATE ──────────────────────────────────────────────────────────────────── */
+let current   = null;
+let prepInt   = null;
+let recInt    = null;
+let prepSecs  = 30;
+let recSecs   = 180;
+let recorder  = null;
+let chunks    = [];
+let blobURL   = null;
+let micStream = null;
+
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+}
+
+/* ── PICK TOPIC ─────────────────────────────────────────────────────────────── */
+function pickTopic() {
+  current = TOPICS[Math.floor(Math.random() * TOPICS.length)];
+  ['prep', 'rec'].forEach(prefix => {
+    document.getElementById(`${prefix}-cat`).textContent = current.cat;
+    document.getElementById(`${prefix}-q`).textContent   = current.q;
+  });
+  startPrep();
+}
+
+/* ── PREP PHASE (30s) ───────────────────────────────────────────────────────── */
+function startPrep() {
+  prepSecs = 30;
+  renderPrepTimer();
+  show('prep');
+
+  prepInt = setInterval(() => {
+    prepSecs--;
+    renderPrepTimer();
+    if (prepSecs <= 0) { clearInterval(prepInt); beginRecording(); }
+  }, 1000);
+}
+
+function renderPrepTimer() {
+  const m = Math.floor(prepSecs / 60);
+  const s = prepSecs % 60;
+  document.getElementById('prep-timer').textContent = `${m}:${String(s).padStart(2, '0')}`;
+  document.getElementById('prep-bar').style.width   = (prepSecs / 30 * 100) + '%';
+}
+
+function skipPrep() {
+  clearInterval(prepInt);
+  beginRecording();
+}
+
+function cancelToHome() {
+  clearInterval(prepInt);
+  show('home');
+}
+
+/* ── RECORDING PHASE (3min) ─────────────────────────────────────────────────── */
+async function beginRecording() {
+  show('rec');
+  recSecs = 180;
+  renderRecTimer();
+
+  try {
+    micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  } catch (e) {
+    show('err');
+    return;
+  }
+
+  const mimeType =
+    MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' :
+    MediaRecorder.isTypeSupported('audio/webm')             ? 'audio/webm' :
+    MediaRecorder.isTypeSupported('audio/mp4')              ? 'audio/mp4'  : '';
+
+  recorder = new MediaRecorder(micStream, mimeType ? { mimeType } : {});
+  chunks   = [];
+
+  recorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
+  recorder.onstop = () => {
+    const blob = new Blob(chunks, { type: mimeType || 'audio/webm' });
+    if (blobURL) URL.revokeObjectURL(blobURL);
+    blobURL = URL.createObjectURL(blob);
+    chunks  = [];
+    micStream.getTracks().forEach(t => t.stop());
+    micStream = null;
+    showPlayback();
+  };
+
+  recorder.start(500);
+
+  recInt = setInterval(() => {
+    recSecs--;
+    renderRecTimer();
+    if (recSecs <= 0) { clearInterval(recInt); stopRecording(); }
+  }, 1000);
+}
+
+function renderRecTimer() {
+  const m = Math.floor(recSecs / 60);
+  const s = recSecs % 60;
+  document.getElementById('rec-timer').textContent = `${m}:${String(s).padStart(2, '0')}`;
+  document.getElementById('rec-bar').style.width   = (recSecs / 180 * 100) + '%';
+}
+
+function stopRecording() {
+  clearInterval(recInt);
+  if (recorder && recorder.state !== 'inactive') recorder.stop();
+}
+
+/* ── PLAYBACK PHASE ─────────────────────────────────────────────────────────── */
+function showPlayback() {
+  document.getElementById('audio-player').src = blobURL;
+  show('play');
+}
+
+function done() {
+  const audio = document.getElementById('audio-player');
+  audio.pause();
+  audio.src = '';
+  if (blobURL) { URL.revokeObjectURL(blobURL); blobURL = null; }
+  chunks = [];
+  show('home');
+}
+</script>
+</body>
+</html>
