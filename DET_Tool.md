@@ -10,7 +10,7 @@ Duolingo English Test(DET) 준비를 위한 자체 제작 웹 툴 모음.
 
 | 툴 | 로컬 경로 | 기능 | 형태 | GitHub | 배포 URL |
 |----|----------|------|------|--------|---------|
-| **SpeakingTopic** | `D:\MyProject\SpeakingTopic` | DET 스피킹 주제 랜덤 출제 + 타이머 | HTML 단일파일 | [저장소](https://github.com/hanaman100-ui/SpeakingTopic) | [GitHub Pages](https://hanaman100-ui.github.io/SpeakingTopic) |
+| **ReadSpeak** | `D:\MyProject\ReadSpeak` | DET Read Then Speak — 지문 읽고 말하기 + 7문장 템플릿 + 타이머 | HTML 단일파일 | [저장소](https://github.com/hanaman100-ui/ReadSpeak) | [GitHub Pages](https://hanaman100-ui.github.io/ReadSpeak) |
 | **RandomPhoto** | `D:\MyProject\RandomPhoto` | 사진 보고 말하기 연습 + 타이머 | HTML 단일파일 | [저장소](https://github.com/hanaman100-ui/RandomPhoto) | [GitHub Pages](https://hanaman100-ui.github.io/RandomPhoto) |
 | **RandomWord** | `D:\MyProject\RandomWord` | AWL 영단어 퀴즈 (adaptive level) | Flask 웹앱 | [저장소](https://github.com/hanaman100-ui/RandomWord) | [Render](https://randomword-a5ma.onrender.com/) |
 | **FillBlank** | `D:\MyProject\FillBlank` | 빈칸 채우기 문장 연습 | HTML 단일파일 ← 현재 | [hanaman100-ui/FillBlank](https://github.com/hanaman100-ui/FillBlank) | https://hanaman100-ui.github.io/FillBlank |
@@ -19,9 +19,9 @@ Duolingo English Test(DET) 준비를 위한 자체 제작 웹 툴 모음.
 
 ---
 
-## 원형 기준: SpeakingTopic
+## 원형 기준: ReadSpeak
 
-> 모든 툴의 UI/UX 원형은 **SpeakingTopic(`index.html`)**을 따른다.
+> 모든 툴의 UI/UX 원형은 **ReadSpeak(`index.html`)**을 따른다.
 
 - 순수 HTML 단일파일 → 서버 불필요, GitHub Pages / Netlify Drop 배포 즉시 가능
 - 외부 라이브러리 없음 (CDN 포함 금지) → 오프라인에서도 동작
@@ -72,7 +72,7 @@ Duolingo English Test(DET) 준비를 위한 자체 제작 웹 툴 모음.
 ### 공통 컴포넌트 스펙
 | 컴포넌트 | 스펙 |
 |---------|------|
-| 주 버튼 | height 54px, border-radius 14px, font-size 18px, font-weight 700, bg `--blue` |
+| 주 버튼 | height 52px, border-radius 14px, font-size 16px, font-weight 700, bg `--blue` |
 | 보조 버튼 | height 48px, border-radius 12px, bg `--panel`, border `--border` |
 | 카드 | border-radius 12px, border 1.5px `--border`, padding 18px 20px |
 | 타이머 | font-size 52px, font-weight 800, color `--text` |
