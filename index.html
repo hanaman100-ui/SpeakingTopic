@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-  <meta name="theme-color" content="#3B82F6" />
-  <title>DET Speaking Practice</title>
+  <meta name="theme-color" content="#0D9488" />
+  <title>ReadSpeak</title>
   <style>
     :root {
-      --blue:   #3B82F6;
-      --blue-d: #2563EB;
+      --blue:   #0D9488;
+      --blue-d: #0F766E;
       --orange: #F59E0B;
       --red:    #EF4444;
       --green:  #10B981;
@@ -53,27 +53,98 @@
       overflow-y: auto;
       justify-content: flex-start;
       text-align: center;
-      padding: 40px 28px 36px;
-      gap: 12px;
+      padding: 36px 24px 36px;
+      gap: 14px;
     }
-    #home h1 { font-size: 34px; font-weight: 800; letter-spacing: -1px; }
-    .sub { color: var(--dim); font-size: 14px; }
-    .divider { width: 100%; height: 1px; background: var(--border); margin: 2px 0; }
+    #home h1 { font-size: 32px; font-weight: 800; letter-spacing: -1px; line-height: 1.2; }
+    .sub { color: var(--dim); font-size: 13px; }
 
-    .desc {
-      color: #374151;
-      font-size: 15px;
-      line-height: 1.75;
+    .cheer {
+      font-size: 14px;
+      font-weight: 700;
+      color: #0D9488;
+      text-align: center;
+    }
+
+    .type-badge {
+      display: inline-block;
+      background: #CCFBF1;
+      color: #0D9488;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 6px 16px;
+      border-radius: 20px;
+    }
+
+    .stats-row {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+    }
+    .stat-box {
+      flex: 1;
+      background: var(--panel);
+      border-radius: 12px;
+      padding: 14px 8px;
+      border: 1.5px solid var(--border);
+    }
+    .stat-num {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text);
+    }
+    .stat-label {
+      font-size: 11px;
+      color: var(--dim);
+      margin-top: 2px;
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      text-align: left;
+      width: 100%;
+    }
+
+    .template-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
       text-align: left;
     }
-    .desc strong { color: var(--blue); }
+    .template-table th {
+      background: var(--panel);
+      color: var(--dim);
+      font-weight: 700;
+      padding: 5px 8px;
+      border-bottom: 1.5px solid var(--border);
+      font-size: 10px;
+    }
+    .template-table td {
+      padding: 6px 8px;
+      border-bottom: 1px solid var(--border);
+      color: #374151;
+      vertical-align: top;
+      line-height: 1.4;
+    }
+    .template-table td:first-child {
+      font-weight: 700;
+      color: #0D9488;
+      white-space: nowrap;
+    }
+    .template-table td:nth-child(2) {
+      white-space: nowrap;
+      font-weight: 600;
+      color: var(--text);
+    }
 
     .hint-box {
-      background: var(--panel);
+      background: #FEF9C3;
       border-radius: 12px;
       padding: 12px 16px;
       font-size: 13px;
-      color: var(--dim);
+      color: #92400E;
       line-height: 1.8;
       text-align: left;
       width: 100%;
@@ -81,19 +152,19 @@
 
     .btn-start {
       width: 100%;
-      height: 54px;
-      background: var(--blue);
+      height: 52px;
+      background: #0D9488;
       color: #fff;
       border: none;
       border-radius: 14px;
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 700;
       cursor: pointer;
       margin-top: 4px;
       -webkit-tap-highlight-color: transparent;
       transition: background 0.15s;
     }
-    .btn-start:active { background: var(--blue-d); }
+    .btn-start:active { background: #0F766E; }
 
     /* ── SHARED TIMER AREA ─────────────────────────────────────────────────── */
     .timer-area {
@@ -310,26 +381,55 @@
 
 <!-- ── HOME ─────────────────────────────────────────────────────────────────── -->
 <div id="home" class="screen">
-  <p style="font-size:1.1rem; font-weight:700; color:#E11D48; text-align:center; margin-bottom:8px;">사랑하는 예은아 화이팅! 💕</p>
-  <h1>DET Speaking</h1>
-  <p class="sub">Duolingo English Test · 스피킹 연습</p>
-  <div class="divider"></div>
-  <p class="desc">
-    주제를 읽고 <strong>3분</strong> 동안 자유롭게 말해보세요.<br>
-    <strong>준비 30초</strong> → 자동 녹음 → 듣고 삭제
-  </p>
-  <div class="hint-box">
-    ⏱ 준비 시간: <strong style="color:#374151">30초</strong> — 주제를 읽고 말할 내용을 구상하세요<br>
-    🎙 답변 시간: <strong style="color:#374151">최대 3분</strong> — 1분 30초 이상 말하는 걸 권장해요<br>
-    🗂 15개 카테고리 · 총 105문항에서 무작위 출제
+  <p class="cheer">예은아, 읽고 말하다 보면 어느새 실력이 쌓여! 🌿</p>
+  <h1>Read Then Speak</h1>
+  <p class="sub">Duolingo English Test · Conversation · Production</p>
+  <span class="type-badge">🏷 유형 12 — Read Then Speak</span>
+
+  <div class="stats-row">
+    <div class="stat-box">
+      <div class="stat-num">20초</div>
+      <div class="stat-label">준비 시간</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num">1문제</div>
+      <div class="stat-label">출제</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num">90초</div>
+      <div class="stat-label">답변 시간</div>
+    </div>
   </div>
+
+  <div class="section-title">📋 7문장 템플릿</div>
+  <table class="template-table">
+    <thead>
+      <tr><th>No.</th><th>역할</th><th>핵심 표현</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>입장 표명</td><td>In this case, it is very obvious that ~</td></tr>
+      <tr><td>2</td><td>주장 1</td><td>From my own perspective, I've always thought that ~</td></tr>
+      <tr><td>3</td><td>예시</td><td>To cite an example, one situation that came to mind is that ~</td></tr>
+      <tr><td>4</td><td>주장 2</td><td>Besides, the main proposition here is that ~</td></tr>
+      <tr><td>5</td><td>근거 자료</td><td>The fundamental reason for this is that ~</td></tr>
+      <tr><td>6</td><td>주장 3</td><td>To be more specific, the end suggestion is that ~</td></tr>
+      <tr><td>7</td><td>결론</td><td>In conclusion, I am convinced that ~</td></tr>
+    </tbody>
+  </table>
+
+  <div class="hint-box">
+    ⏰ 준비 20초 활용법<br>
+    처음 10초 — 질문 핵심 파악 (주제·입장)<br>
+    남은 10초 — 근거 3가지 빠르게 구상
+  </div>
+
   <button class="btn-start" onclick="pickTopic()">시  작</button>
 </div>
 
 <!-- ── PREP ─────────────────────────────────────────────────────────────────── -->
 <div id="prep" class="screen hidden">
   <div class="timer-area">
-    <div class="big-timer" id="prep-timer">0:30</div>
+    <div class="big-timer" id="prep-timer">0:20</div>
   </div>
   <div class="prog-wrap">
     <div class="prog-bar" id="prep-bar" style="width:100%"></div>
@@ -350,13 +450,13 @@
 <!-- ── RECORDING ──────────────────────────────────────────────────────────── -->
 <div id="rec" class="screen hidden">
   <div class="timer-area">
-    <div class="big-timer" id="rec-timer">3:00</div>
+    <div class="big-timer" id="rec-timer">1:30</div>
   </div>
   <div class="prog-wrap">
     <div class="prog-bar" id="rec-bar" style="width:100%"></div>
   </div>
   <div class="rec-body">
-    <p class="screen-title">Speak about the topic below for 3 minutes.</p>
+    <p class="screen-title">Speak about the topic below for 90 seconds.</p>
     <div class="topic-card">
       <div class="cat-label" id="rec-cat"></div>
       <div id="rec-q"></div>
@@ -549,8 +649,8 @@ const CATEGORIES = [...new Set(TOPICS.map(t => t.cat))];
 let current   = null;
 let prepInt   = null;
 let recInt    = null;
-let prepSecs  = 30;
-let recSecs   = 180;
+let prepSecs  = 20;
+  let recSecs   = 90;
 let recorder  = null;
 let chunks    = [];
 let blobURL   = null;
@@ -573,7 +673,7 @@ function pickTopic() {
 
 /* ── PREP PHASE (30s) ───────────────────────────────────────────────────────── */
 function startPrep() {
-  prepSecs = 30;
+  prepSecs = 20;
   renderPrepTimer();
   show('prep');
 
@@ -588,7 +688,7 @@ function renderPrepTimer() {
   const m = Math.floor(prepSecs / 60);
   const s = prepSecs % 60;
   document.getElementById('prep-timer').textContent = `${m}:${String(s).padStart(2, '0')}`;
-  document.getElementById('prep-bar').style.width   = (prepSecs / 30 * 100) + '%';
+  document.getElementById('prep-bar').style.width   = (prepSecs / 20 * 100) + '%';
 }
 
 function skipPrep() {
@@ -604,7 +704,7 @@ function cancelToHome() {
 /* ── RECORDING PHASE (3min) ─────────────────────────────────────────────────── */
 async function beginRecording() {
   show('rec');
-  recSecs = 180;
+  recSecs = 90;
   renderRecTimer();
 
   try {
@@ -646,7 +746,7 @@ function renderRecTimer() {
   const m = Math.floor(recSecs / 60);
   const s = recSecs % 60;
   document.getElementById('rec-timer').textContent = `${m}:${String(s).padStart(2, '0')}`;
-  document.getElementById('rec-bar').style.width   = (recSecs / 180 * 100) + '%';
+  document.getElementById('rec-bar').style.width   = (recSecs / 90 * 100) + '%';
 }
 
 function stopRecording() {
